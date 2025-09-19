@@ -2,7 +2,7 @@
 
 Welcome to the Platform Engineering team! This guide will help you understand how to contribute to our platform automation and IssueOps workflows.
 
-## 🔄 IssueOps Workflow
+## IssueOps Workflow
 
 Our platform team uses IssueOps to manage infrastructure requests, deployments, and operational tasks. Here's how it works:
 
@@ -30,7 +30,7 @@ Our platform team uses IssueOps to manage infrastructure requests, deployments, 
 | `completed` | Request has been fulfilled | Added when workflow completes |
 | `blocked` | Request is blocked by dependencies | Manual intervention required |
 
-## 🛠️ Development Guidelines
+## Development Guidelines
 
 ### Infrastructure as Code
 
@@ -53,14 +53,14 @@ Our platform team uses IssueOps to manage infrastructure requests, deployments, 
 - Implement proper RBAC for resource access
 - Review all production deployments
 
-## 📚 Documentation
+## Documentation
 
 - Update documentation when adding new features
 - Include examples and use cases
 - Keep the README.md up to date
 - Document any breaking changes
 
-## 🚀 Deployment Process
+## Deployment Process
 
 ### Development Environment
 - Auto-deploy on PR merge to `main`
@@ -78,13 +78,13 @@ Our platform team uses IssueOps to manage infrastructure requests, deployments, 
 - Additional security scanning
 - Rollback plan mandatory
 
-## 📞 Getting Help
+## Getting Help
 
 - **Slack**: #platform-engineering
 - **Email**: platform-team@company.com
 - **Emergency**: Use critical severity bug report
 
-## 🎯 Team Goals
+## Team Goals
 
 1. **Self-Service**: Enable teams to provision infrastructure autonomously
 2. **Standardization**: Consistent, repeatable infrastructure patterns
