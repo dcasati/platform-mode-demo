@@ -1,0 +1,246 @@
+{
+  "version": "1.0",
+  "metadata": {
+    "name": "Azure Platform Service Catalog",
+    "description": "Approved services and configurations for the platform engineering team",
+    "lastUpdated": "2025-09-19",
+    "owner": "platform-team"
+  },
+  "constraints": {
+    "approvedRegions": ["eastus2"],
+    "mandatoryTags": [
+      "Environment",
+      "Project", 
+      "CostCenter",
+      "Owner",
+      "CreatedBy",
+      "CreatedDate",
+      "Purpose"
+    ]
+  },
+  "services": {
+    "aks": {
+      "name": "Azure Kubernetes Service",
+      "description": "Managed Kubernetes cluster for container workloads",
+      "serviceId": "aks",
+      "category": "compute",
+      "approvedConfigurations": {
+        "systemNodePool": {
+          "vmSize": ["Standard_DS2_v2"],
+          "osDiskSizeGB": 128,
+          "minNodes": 1,
+          "maxNodes": 10,
+          "autoScaling": true
+        },
+        "gpuNodePool": {
+          "vmSize": ["Standard_NC40ads_H100_v5"],
+          "osDiskSizeGB": 256,
+          "minNodes": 0,
+          "maxNodes": 3,
+          "autoScaling": true,
+          "optional": true
+        },
+        "kubernetesVersions": {
+          "development": "latest",
+          "staging": "latest", 
+          "production": "n-1"
+        },
+        "networkPlugin": "azure",
+        "networkPolicy": "calico",
+        "loadBalancerSku": "Standard",
+        "privateCluster": {
+          "development": false,
+          "staging": false,
+          "production": true
+        }
+      },
+      "costLimits": {
+        "development": 500,
+        "staging": 1000,
+        "production": "unlimited"
+      }
+    },
+    "keyvault": {
+      "name": "Azure Key Vault",
+      "description": "Secure secrets, keys, and certificates management",
+      "serviceId": "keyvault",
+      "category": "security",
+      "approvedConfigurations": {
+        "skus": {
+          "development": "standard",
+          "staging": "standard",
+          "production": "premium"
+        },
+        "accessModel": ["rbac", "accessPolicy"],
+        "networkAccess": {
+          "development": "public",
+          "staging": "public",
+          "production": "private"
+        },
+        "softDeleteEnabled": true,
+        "purgeProtection": {
+          "development": false,
+          "staging": false,
+          "production": true
+        }
+      },
+      "supportedSecretTypes": [
+        "application-secrets",
+        "connection-strings", 
+        "api-keys",
+        "certificates",
+        "ssh-keys"
+      ]
+    },
+    "acr": {
+      "name": "Azure Container Registry",
+      "description": "Private container image registry",
+      "serviceId": "acr",
+      "category": "containers",
+      "approvedConfigurations": {
+        "skus": {
+          "development": "Basic",
+          "staging": "Standard", 
+          "production": "Premium"
+        },
+        "geoReplication": {
+          "development": false,
+          "staging": false,
+          "production": true
+        },
+        "contentTrust": {
+          "development": false,
+          "staging": false,
+          "production": true
+        },
+        "vulnerabilityScanning": {
+          "development": false,
+          "staging": true,
+          "production": true
+        },
+        "privateEndpoint": {
+          "development": false,
+          "staging": false,
+          "production": true
+        },
+        "retentionDays": {
+          "development": 30,
+          "staging": 90,
+          "production": 365
+        }
+      }
+    },
+    "monitor": {
+      "name": "Azure Monitor",
+      "description": "Application performance monitoring and alerting", 
+      "serviceId": "monitor",
+      "category": "monitoring",
+      "approvedConfigurations": {
+        "components": [
+          "application-insights",
+          "metrics",
+          "alerts", 
+          "dashboards"
+        ],
+        "dataRetentionDays": {
+          "development": 30,
+          "staging": 90,
+          "production": 730
+        },
+        "alertChannels": {
+          "critical": ["sms", "email", "teams"],
+          "warning": ["email", "teams"],
+          "informational": ["teams"]
+        },
+        "samplingPercentage": {
+          "development": 100,
+          "staging": 50,
+          "production": 10
+        }
+      }
+    },
+    "loganalytics": {
+      "name": "Log Analytics Workspace",
+      "description": "Centralized logging and log query platform",
+      "serviceId": "loganalytics", 
+      "category": "monitoring",
+      "approvedConfigurations": {
+        "pricingTiers": {
+          "development": "payAsYouGo",
+          "staging": "payAsYouGo",
+          "production": "commitmentTier100GB"
+        },
+        "dataRetentionDays": {
+          "development": 30,
+          "staging": 90,
+          "production": 730
+        },
+        "dataSources": [
+          "azure-activity-logs",
+          "resource-diagnostic-logs",
+          "application-logs",
+          "custom-logs",
+          "security-events"
+        ],
+        "dailyQuotaGB": {
+          "development": 5,
+          "staging": 20,
+          "production": 100
+        }
+      }
+    }
+  },
+  "environmentPolicies": {
+    "development": {
+      "costLimitUSD": 500,
+      "autoShutdown": true,
+      "shutdownTime": "19:00",
+      "shutdownWeekends": true,
+      "approvalRequired": false
+    },
+    "staging": {
+      "costLimitUSD": 1000,
+      "autoShutdown": false,
+      "approvalRequired": true,
+      "approvers": ["platform-team"]
+    },
+    "production": {
+      "costLimitUSD": null,
+      "autoShutdown": false,
+      "approvalRequired": true,
+      "approvers": ["platform-team", "senior-engineers"],
+      "additionalSecurity": true,
+      "privateEndpointsRequired": true,
+      "backupRequired": true
+    }
+  },
+  "validation": {
+    "rules": [
+      {
+        "name": "region-validation",
+        "description": "Ensure only approved regions are used",
+        "type": "mandatory",
+        "check": "region in approvedRegions"
+      },
+      {
+        "name": "vm-size-validation", 
+        "description": "Validate AKS node pool VM sizes",
+        "type": "mandatory",
+        "service": "aks",
+        "check": "vmSize in approvedConfigurations.systemNodePool.vmSize or vmSize in approvedConfigurations.gpuNodePool.vmSize"
+      },
+      {
+        "name": "cost-validation",
+        "description": "Ensure cost estimates are within limits",
+        "type": "warning",
+        "check": "estimatedCost <= environmentPolicies[environment].costLimitUSD"
+      },
+      {
+        "name": "tag-validation",
+        "description": "Ensure mandatory tags are provided",
+        "type": "mandatory", 
+        "check": "all mandatoryTags present"
+      }
+    ]
+  }
+}
