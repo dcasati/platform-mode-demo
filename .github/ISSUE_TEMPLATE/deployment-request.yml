@@ -1,0 +1,76 @@
+name: Deployment Request
+description: Request deployment of application or infrastructure code
+title: "[DEPLOY] "
+labels: ["deployment", "platform-team"]
+assignees:
+  - dcasati
+body:
+  - type: dropdown
+    id: deployment-type
+    attributes:
+      label: Deployment Type
+      description: What type of deployment is this?
+      options:
+        - Application Deployment
+        - Infrastructure Deployment
+        - Configuration Update
+        - Rollback
+        - Hotfix
+    validations:
+      required: true
+  
+  - type: dropdown
+    id: environment
+    attributes:
+      label: Target Environment
+      description: Which environment should this be deployed to?
+      options:
+        - Development
+        - Staging
+        - Production
+    validations:
+      required: true
+  
+  - type: input
+    id: repository
+    attributes:
+      label: Source Repository
+      description: Repository containing the code to deploy
+      placeholder: https://github.com/organization/repo-name
+    validations:
+      required: true
+  
+  - type: input
+    id: branch-tag
+    attributes:
+      label: Branch/Tag
+      description: Branch or tag to deploy
+      placeholder: main, v1.2.3, feature/new-feature
+    validations:
+      required: true
+  
+  - type: textarea
+    id: deployment-notes
+    attributes:
+      label: Deployment Notes
+      description: Special instructions, dependencies, or considerations
+      placeholder: |
+        - Dependencies that need to be deployed first
+        - Configuration changes required
+        - Database migrations needed
+        - Rollback plan
+  
+  - type: checkboxes
+    id: pre-deployment-checklist
+    attributes:
+      label: Pre-deployment Checklist
+      description: Confirm the following before deployment
+      options:
+        - label: Code has been reviewed and approved
+          required: true
+        - label: Tests are passing
+          required: true
+        - label: Documentation has been updated
+          required: false
+        - label: Monitoring and alerting are configured
+          required: false
