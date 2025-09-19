@@ -1,0 +1,55 @@
+apiVersion: kaito.sh/v1alpha1
+kind: Workspace
+metadata:
+  name: phi2-inference-example
+  namespace: jupyterhub
+spec:
+  instance:
+    image: "mcr.microsoft.com/aks/kaito/kaito-inference:latest"
+    instanceType: "Standard_NC40ads_H100_v5"
+  resource:
+    count: 1
+    instanceType: "Standard_NC40ads_H100_v5"
+  inference:
+    preset:
+      name: "phi-2"
+    service:
+      port: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: phi2-inference-service
+  namespace: jupyterhub
+spec:
+  selector:
+    app: kaito-workspace
+    workspace: phi2-inference-example
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: ClusterIP
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: phi2-inference-network-policy
+  namespace: jupyterhub
+spec:
+  podSelector:
+    matchLabels:
+      workspace: phi2-inference-example
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: jupyterhub
+    ports:
+    - protocol: TCP
+      port: 80
+  egress:
+  - {}  # Allow all outbound traffic for model downloading
