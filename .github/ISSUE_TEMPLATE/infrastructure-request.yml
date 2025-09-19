@@ -1,0 +1,76 @@
+name: Infrastructure Request
+description: Request new infrastructure resources or modifications
+title: "[INFRA] "
+labels: ["infrastructure", "platform-team"]
+assignees:
+  - dcasati
+body:
+  - type: dropdown
+    id: request-type
+    attributes:
+      label: Request Type
+      description: What type of infrastructure request is this?
+      options:
+        - New Resource Deployment
+        - Resource Modification
+        - Resource Deletion
+        - Access Request
+        - Configuration Change
+    validations:
+      required: true
+  
+  - type: dropdown
+    id: environment
+    attributes:
+      label: Environment
+      description: Which environment is this request for?
+      options:
+        - Development
+        - Staging
+        - Production
+    validations:
+      required: true
+  
+  - type: textarea
+    id: resource-details
+    attributes:
+      label: Resource Details
+      description: Provide detailed information about the resources needed
+      placeholder: |
+        - Resource type (VM, Database, Storage, etc.)
+        - Specifications (size, configuration, etc.)
+        - Region/Location
+        - Special requirements
+    validations:
+      required: true
+  
+  - type: textarea
+    id: business-justification
+    attributes:
+      label: Business Justification
+      description: Explain why this resource is needed
+      placeholder: What business need does this resource fulfill?
+    validations:
+      required: true
+  
+  - type: input
+    id: cost-center
+    attributes:
+      label: Cost Center
+      description: Cost center or project code for billing
+      placeholder: CC-12345
+    validations:
+      required: true
+  
+  - type: checkboxes
+    id: approval-checklist
+    attributes:
+      label: Pre-approval Checklist
+      description: Confirm the following before submission
+      options:
+        - label: I have manager approval for this request
+          required: true
+        - label: I understand the associated costs
+          required: true
+        - label: I will be responsible for resource lifecycle management
+          required: true
