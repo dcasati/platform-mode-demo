@@ -22,9 +22,13 @@ Our platform provides a curated catalog of approved Azure services:
 - **Azure Monitor** - Application performance monitoring
 - **Log Analytics Workspace** - Centralized logging platform
 
+**Ready-to-Deploy Solutions**:
+- **🚀 JupyterHub on AKS with GPU** - AI/ML development platform with KAITO operator support
+
 **Documentation**: 
 - [Complete Service Catalog](docs/service-catalog.md) - Detailed specifications and policies
 - [Quick Reference](docs/quick-reference.md) - Fast lookup for common configurations
+- [JupyterHub Usage Guide](docs/jupyterhub-kaito-usage-guide.md) - AI/ML platform deployment and usage
 
 ## Getting Started
 
@@ -37,6 +41,25 @@ Our platform provides a curated catalog of approved Azure services:
 5. Specify configuration using only approved options
 6. Provide business justification and cost approval
 7. Submit and wait for automated validation
+
+### Quick Deploy: JupyterHub on AKS with GPU
+
+Deploy a complete AI/ML platform with GPU support:
+
+```bash
+git clone https://github.com/dcasati/platform-mode-demo.git
+cd platform-mode-demo/infrastructure
+./deploy.sh
+```
+
+**What you get:**
+- AKS cluster with system (Standard_DS2_v2) and GPU (Standard_NC40ads_H100_v5) node pools
+- JupyterHub with TensorFlow, PyTorch, and KAITO development environments
+- GPU-accelerated notebooks for AI/ML development
+- KAITO operator for AI inference workloads
+- Cost-optimized auto-scaling (estimated $410/month)
+
+See the [JupyterHub Usage Guide](docs/jupyterhub-kaito-usage-guide.md) for detailed instructions.
 
 ### Approved Services Quick Reference
 

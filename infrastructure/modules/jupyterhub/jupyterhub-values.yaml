@@ -1,0 +1,218 @@
+# JupyterHub Helm Chart Values
+# Optimized for AI/ML workloads with GPU support
+
+# Hub configuration
+hub:
+  config:
+    JupyterHub:
+      admin_access: true
+      authenticator_class: dummyauthenticator.DummyAuthenticator # For development
+    DummyAuthenticator:
+      password: "jupyter" # For development only
+    Authenticator:
+      enable_auth_state: true
+  
+  # Hub resources
+  resources:
+    requests:
+      cpu: 200m
+      memory: 512Mi
+    limits:
+      cpu: 1
+      memory: 1Gi
+  
+  # Persistent storage for hub
+  db:
+    pvc:
+      storageClassName: ${storage_class}
+      storage: ${hub_storage_size}
+  
+  # Hub service configuration
+  service:
+    type: LoadBalancer
+    ports:
+      nodePort: 
+    annotations:
+      service.beta.kubernetes.io/azure-load-balancer-internal: "false"
+
+# Proxy configuration
+proxy:
+  secretToken: # Will be auto-generated
+  service:
+    type: LoadBalancer
+    annotations:
+      service.beta.kubernetes.io/azure-load-balancer-internal: "false"
+  https:
+    enabled: false # For development
+  chp:
+    resources:
+      requests:
+        cpu: 200m
+        memory: 512Mi
+      limits:
+        cpu: 1
+        memory: 1Gi
+
+# Single-user server configuration
+singleuser:
+  # Default image with AI/ML tools
+  image:
+    name: ${image_name}
+    tag: "latest"
+    pullPolicy: Always
+  
+  # Default resources for user pods
+  cpu:
+    limit: ${cpu_limit}
+    guarantee: 0.5
+  memory:
+    limit: ${memory_limit}
+    guarantee: 2Gi
+  
+  %{ if enable_gpu }
+  # GPU configuration
+  extraResource:
+    limits:
+      nvidia.com/gpu: ${gpu_limit}
+    guarantees:
+      nvidia.com/gpu: 0
+  
+  # Node selector for GPU nodes
+  nodeSelector:
+    %{ for key, value in gpu_node_selector }
+    ${key}: "${value}"
+    %{ endfor }
+  
+  # Tolerations for GPU node taints
+  extraTolerations:
+    - key: nvidia.com/gpu
+      operator: Equal
+      value: "true"
+      effect: NoSchedule
+  %{ endif }
+  
+  # Persistent storage for users
+  storage:
+    type: dynamic
+    dynamic:
+      storageClass: ${storage_class}
+      pvcNameTemplate: jupyter-{username}
+      volumeNameTemplate: jupyter-{username}
+      storageAccessModes:
+        - ReadWriteOnce
+    capacity: ${user_storage_size}
+  
+  # Profile options for users
+  profileList:
+    - display_name: "Standard Environment"
+      description: "CPU-only environment for basic data science"
+      default: true
+      kubespawner_override:
+        image: "jupyter/datascience-notebook:latest"
+        cpu_limit: 2
+        mem_limit: 4G
+    
+    %{ if enable_gpu }
+    - display_name: "GPU Environment (TensorFlow)"
+      description: "GPU-accelerated environment for deep learning with TensorFlow"
+      kubespawner_override:
+        image: "jupyter/tensorflow-notebook:latest"
+        cpu_limit: ${cpu_limit}
+        mem_limit: ${memory_limit}
+        extra_resource_limits:
+          nvidia.com/gpu: "${gpu_limit}"
+        node_selector:
+          %{ for key, value in gpu_node_selector }
+          ${key}: "${value}"
+          %{ endfor }
+        tolerations:
+          - key: nvidia.com/gpu
+            operator: Equal
+            value: "true"
+            effect: NoSchedule
+    
+    - display_name: "GPU Environment (PyTorch)"
+      description: "GPU-accelerated environment for deep learning with PyTorch"
+      kubespawner_override:
+        image: "jupyter/pytorch-notebook:latest"
+        cpu_limit: ${cpu_limit}
+        mem_limit: ${memory_limit}
+        extra_resource_limits:
+          nvidia.com/gpu: "${gpu_limit}"
+        node_selector:
+          %{ for key, value in gpu_node_selector }
+          ${key}: "${value}"
+          %{ endfor }
+        tolerations:
+          - key: nvidia.com/gpu
+            operator: Equal
+            value: "true"
+            effect: NoSchedule
+            
+    - display_name: "KAITO Development Environment"
+      description: "Environment with KAITO operator tools for AI inference development"
+      kubespawner_override:
+        image: "jupyter/base-notebook:latest"
+        cpu_limit: ${cpu_limit}
+        mem_limit: ${memory_limit}
+        extra_resource_limits:
+          nvidia.com/gpu: "${gpu_limit}"
+        node_selector:
+          %{ for key, value in gpu_node_selector }
+          ${key}: "${value}"
+          %{ endfor }
+        tolerations:
+          - key: nvidia.com/gpu
+            operator: Equal
+            value: "true"
+            effect: NoSchedule
+        lifecycle_hooks:
+          postStart:
+            exec:
+              command:
+                - "/bin/bash"
+                - "-c"
+                - |
+                  # Install KAITO CLI and tools
+                  pip install kubernetes pyyaml
+                  # Add KAITO examples to user home
+                  cp -r /opt/kaito-examples /home/jovyan/
+        volume_mounts:
+          - name: kaito-examples
+            mountPath: /opt/kaito-examples
+            readOnly: true
+        volumes:
+          - name: kaito-examples
+            configMap:
+              name: kaito-examples
+    %{ endif }
+
+# Scheduling configuration
+scheduling:
+  userScheduler:
+    enabled: false # For development simplicity
+  podPriority:
+    enabled: false
+  userPlaceholder:
+    enabled: false
+
+# Culling configuration (auto-shutdown idle servers)
+cull:
+  enabled: true
+  timeout: 3600    # 1 hour
+  every: 600       # Check every 10 minutes
+  concurrency: 10
+  users: false     # Don't cull named users
+  removeNamedServers: false
+  maxAge: 0        # Don't cull based on age
+
+# Ingress configuration (disabled for development)
+ingress:
+  enabled: false
+
+# Image puller (pre-pull images on nodes)
+prePuller:
+  hook:
+    enabled: true
+  continuous:
+    enabled: false # For development
