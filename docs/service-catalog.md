@@ -2,13 +2,13 @@
 
 This document defines the approved services, configurations, and constraints for our Azure platform.
 
-## 🌍 Global Constraints
+## Global Constraints
 
 - **Approved Region**: East US 2 (eastus2) only
 - **Resource Naming**: Must follow pattern: `{environment}-{service}-{purpose}-{random}`
 - **Tagging**: All resources must include mandatory tags (see below)
 
-## 📋 Approved Services
+## Approved Services
 
 ### 1. Azure Kubernetes Service (AKS)
 
@@ -137,7 +137,7 @@ This document defines the approved services, configurations, and constraints for
 
 ---
 
-## 🏷️ Mandatory Resource Tags
+## Mandatory Resource Tags
 
 All resources must include the following tags:
 
@@ -151,7 +151,7 @@ All resources must include the following tags:
 | `CreatedDate` | When resource was created | `2025-09-19` |
 | `Purpose` | Brief description of use | `web-frontend`, `data-processing` |
 
-## 💰 Cost Guidelines
+## Cost Guidelines
 
 ### Spending Limits by Environment:
 - **Development**: $500/month per project
@@ -163,7 +163,7 @@ All resources must include the following tags:
 - **Right-sizing**: Regular review of resource utilization
 - **Reserved Instances**: Production workloads use reserved capacity when applicable
 
-## 🔐 Security Requirements
+## Security Requirements
 
 ### Network Security:
 - **Production**: Private endpoints required for PaaS services
@@ -180,7 +180,7 @@ All resources must include the following tags:
 - **Auditing**: All administrative actions logged
 - **Backup**: Production data backed up daily
 
-## 📝 Request Process
+## Request Process
 
 1. **Create Issue**: Use "Infrastructure Request" template
 2. **Select Service**: Choose from approved catalog services
@@ -189,18 +189,18 @@ All resources must include the following tags:
 5. **Review & Approval**: Platform team validates against catalog
 6. **Automated Deployment**: Compliant requests auto-deployed
 
-## 🚫 Unsupported Configurations
+## Unsupported Configurations
 
 The following are **NOT SUPPORTED** and requests will be automatically rejected:
 
-- ❌ Regions other than East US 2
-- ❌ VM sizes not listed in approved configurations
-- ❌ Custom VM images (use marketplace images only)
-- ❌ Public endpoints for Production resources
-- ❌ Resources without proper tagging
-- ❌ Shared resources across environments
+- Regions other than East US 2
+- VM sizes not listed in approved configurations
+- Custom VM images (use marketplace images only)
+- Public endpoints for Production resources
+- Resources without proper tagging
+- Shared resources across environments
 
-## 📞 Support & Exceptions
+## Support & Exceptions
 
 - **Standard Requests**: Use IssueOps templates
 - **Exception Requests**: Require architecture review
