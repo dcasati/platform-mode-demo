@@ -1,5 +1,5 @@
 name: Infrastructure Request
-description: Request new infrastructure resources or modifications
+description: Request new infrastructure resources from our approved service catalog
 title: "[INFRA] "
 labels: ["infrastructure", "platform-team"]
 assignees:
@@ -20,9 +20,24 @@ body:
       required: true
   
   - type: dropdown
+    id: service-type
+    attributes:
+      label: Service Type
+      description: Select the Azure service you need (from approved catalog)
+      options:
+        - Azure Kubernetes Service (AKS)
+        - Azure Key Vault
+        - Azure Container Registry (ACR)
+        - Azure Monitor
+        - Log Analytics Workspace
+        - Multiple Services (specify in details)
+    validations:
+      required: true
+  
+  - type: dropdown
     id: environment
     attributes:
-      label: Environment
+      label: Target Environment
       description: Which environment is this request for?
       options:
         - Development
@@ -31,16 +46,56 @@ body:
     validations:
       required: true
   
-  - type: textarea
-    id: resource-details
+  - type: input
+    id: region
     attributes:
-      label: Resource Details
-      description: Provide detailed information about the resources needed
+      label: Azure Region
+      description: Azure region (must be East US 2 per platform policy)
+      value: eastus2
+      placeholder: eastus2
+    validations:
+      required: true
+  
+  - type: textarea
+    id: service-configuration
+    attributes:
+      label: Service Configuration
+      description: Specify the configuration for your requested service
       placeholder: |
-        - Resource type (VM, Database, Storage, etc.)
-        - Specifications (size, configuration, etc.)
-        - Region/Location
-        - Special requirements
+        For AKS:
+        - Node pool type: Standard (Standard_DS2_v2) or GPU (Standard_NC40ads_H100_v5)
+        - Min/Max nodes: e.g., 1-5
+        - Kubernetes version preference
+        - Network requirements
+        
+        For Key Vault:
+        - SKU needed: Standard or Premium
+        - Access method: RBAC or Access Policy
+        - Network access: Public or Private endpoint
+        
+        For ACR:
+        - SKU needed: Basic, Standard, or Premium
+        - Geo-replication required: Yes/No
+        - Content trust needed: Yes/No
+        
+        For Azure Monitor:
+        - Components needed: Application Insights, Metrics, Alerts
+        - Data retention period
+        - Alert notification preferences
+        
+        For Log Analytics:
+        - Pricing tier preference
+        - Data sources to connect
+        - Data retention requirements
+    validations:
+      required: true
+  
+  - type: input
+    id: project-name
+    attributes:
+      label: Project Name
+      description: Name of the project or application this resource supports
+      placeholder: e.g., ecommerce-web, ml-training, data-analytics
     validations:
       required: true
   
@@ -48,8 +103,12 @@ body:
     id: business-justification
     attributes:
       label: Business Justification
-      description: Explain why this resource is needed
-      placeholder: What business need does this resource fulfill?
+      description: Explain why this resource is needed and expected usage
+      placeholder: |
+        - What business need does this resource fulfill?
+        - Expected workload characteristics
+        - Performance requirements
+        - Compliance or security requirements
     validations:
       required: true
   
@@ -62,6 +121,38 @@ body:
     validations:
       required: true
   
+  - type: input
+    id: estimated-monthly-cost
+    attributes:
+      label: Estimated Monthly Cost
+      description: Expected monthly cost in USD
+      placeholder: e.g., $500, $1000
+    validations:
+      required: true
+  
+  - type: textarea
+    id: resource-tags
+    attributes:
+      label: Resource Tags
+      description: Additional tags for this resource (mandatory tags will be added automatically)
+      placeholder: |
+        Purpose: web-frontend
+        Department: engineering
+        ContactEmail: team-lead@company.com
+  
+  - type: checkboxes
+    id: catalog-compliance
+    attributes:
+      label: Service Catalog Compliance
+      description: Confirm your request complies with platform policies
+      options:
+        - label: I have reviewed the [Service Catalog](../docs/service-catalog.md) and my request uses only approved configurations
+          required: true
+        - label: I understand that requests outside the catalog may be rejected
+          required: true
+        - label: I confirm the region is East US 2 as required by platform policy
+          required: true
+  
   - type: checkboxes
     id: approval-checklist
     attributes:
@@ -70,7 +161,9 @@ body:
       options:
         - label: I have manager approval for this request
           required: true
-        - label: I understand the associated costs
+        - label: I understand the associated costs and have budget approval
           required: true
         - label: I will be responsible for resource lifecycle management
           required: true
+        - label: I understand that production resources require additional security review
+          required: false
