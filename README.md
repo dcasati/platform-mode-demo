@@ -2,7 +2,7 @@
 
 Welcome to the Platform Engineering team repository. This repository serves as the central hub for infrastructure automation, resource deployment, and operational workflows using platform mode approaches.
 
-## 🎯 Purpose
+## Purpose
 
 This repository enables:
 
@@ -12,7 +12,7 @@ This repository enables:
 - **Infrastructure as Code**: Version-controlled infrastructure definitions
 - **Team Collaboration**: Centralized platform engineering workflows
 
-## 🗂️ Service Catalog
+## Service Catalog
 
 Our platform provides a curated catalog of approved Azure services:
 
@@ -22,11 +22,11 @@ Our platform provides a curated catalog of approved Azure services:
 - **Azure Monitor** - Application performance monitoring
 - **Log Analytics Workspace** - Centralized logging platform
 
-📚 **Documentation**: 
+**Documentation**: 
 - [Complete Service Catalog](docs/service-catalog.md) - Detailed specifications and policies
 - [Quick Reference](docs/quick-reference.md) - Fast lookup for common configurations
 
-## 🚀 Getting Started
+## Getting Started
 
 ### For Infrastructure Requests
 
@@ -49,26 +49,26 @@ Our platform provides a curated catalog of approved Azure services:
 
 ### Issue Templates
 
-- **🏗️ Infrastructure Request**: Request approved catalog services
-- **🚀 Deployment Request**: Deploy applications or infrastructure
-- **🐛 Bug Report**: Report platform infrastructure issues
+- **Infrastructure Request**: Request approved catalog services
+- **Deployment Request**: Deploy applications or infrastructure
+- **Bug Report**: Report platform infrastructure issues
 
-## 🔄 How IssueOps Works
+## How IssueOps Works
 
-1. **Create Request** → Use structured issue templates
-2. **Auto-Validation** → Automated compliance checking against catalog
-3. **Team Review** → Platform team approves compliant requests
-4. **Auto-Deploy** → GitHub Actions deploys approved resources
-5. **Completion** → Issue updated with deployment results
+1. **Create Request** - Use structured issue templates
+2. **Auto-Validation** - Automated compliance checking against catalog
+3. **Team Review** - Platform team approves compliant requests
+4. **Auto-Deploy** - GitHub Actions deploys approved resources
+5. **Completion** - Issue updated with deployment results
 
-## ⚡ Platform Constraints
+## Platform Constraints
 
-- **📍 Region**: East US 2 (`eastus2`) only
-- **💰 Cost Limits**: $500 (dev), $1000 (staging), unlimited (prod with approval)  
-- **🔒 Security**: Private endpoints required for production PaaS services
-- **🏷️ Tagging**: All resources must include mandatory tags
+- **Region**: East US 2 (`eastus2`) only
+- **Cost Limits**: $500 (dev), $1000 (staging), unlimited (prod with approval)  
+- **Security**: Private endpoints required for production PaaS services
+- **Tagging**: All resources must include mandatory tags
 
-## 🔐 Security & Compliance
+## Security & Compliance
 
 - All deployments require approval through issue review process
 - Secrets are managed through GitHub Secrets and Azure Key Vault
@@ -76,7 +76,7 @@ Our platform provides a curated catalog of approved Azure services:
 - Resource access follows principle of least privilege
 - Production resources require additional security review
 
-## 🆘 Support
+## Support
 
 For questions or issues:
 1. Check existing [issues](../../issues) and [documentation](docs/)
@@ -84,10 +84,10 @@ For questions or issues:
 3. Review the [Service Catalog](docs/service-catalog.md) for approved configurations
 4. Reach out to the platform engineering team on Slack
 
-## 🤝 Contributing
+## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on contributing to this repository.
 
 ---
 
-**🎯 Platform Goal**: Enable self-service infrastructure provisioning while maintaining security, compliance, and cost control through standardized service catalog and automated workflows.
+**Platform Goal**: Enable self-service infrastructure provisioning while maintaining security, compliance, and cost control through standardized service catalog and automated workflows.
