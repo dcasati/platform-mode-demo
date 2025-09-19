@@ -2,7 +2,7 @@
 
 This is a quick reference guide for the approved Azure services in our platform catalog.
 
-## 🚀 Quick Service Selection
+## Quick Service Selection
 
 | Service | Development | Staging | Production |
 |---------|-------------|---------|------------|
@@ -13,16 +13,16 @@ This is a quick reference guide for the approved Azure services in our platform 
 | **Monitor** | 30 days retention | 90 days retention | 2 years retention |
 | **Log Analytics** | Pay-as-go | Pay-as-go | 100GB commitment |
 
-## 📍 Region Constraint
+## Region Constraint
 - **Approved Region**: East US 2 (`eastus2`) only
 - All services must be deployed to East US 2
 
-## 💰 Cost Limits
+## Cost Limits
 - **Development**: $500/month
 - **Staging**: $1,000/month  
 - **Production**: No limit (requires approval)
 
-## 🔧 AKS Node Pool Specifications
+## AKS Node Pool Specifications
 
 ### System Node Pool
 - **VM Size**: Standard_DS2_v2 (2 vCPU, 7 GB RAM)
@@ -39,7 +39,7 @@ This is a quick reference guide for the approved Azure services in our platform 
 - **Auto-scaling**: Enabled
 - **Use Case**: ML/AI workloads, GPU computing
 
-## 🏷️ Required Tags
+## Required Tags
 All resources must include:
 - `Environment`: dev/staging/prod
 - `Project`: Your project name
@@ -48,7 +48,7 @@ All resources must include:
 - `CreatedBy`: Requester email
 - `Purpose`: Brief description
 
-## 📋 Request Process
+## Request Process
 1. Use [Infrastructure Request](../../issues/new?template=infrastructure-request.yml) template
 2. Select service from approved catalog
 3. Specify configuration using approved options
@@ -57,7 +57,7 @@ All resources must include:
 6. Platform team approval (if required)
 7. Automated deployment
 
-## ❌ Common Rejection Reasons
+## Common Rejection Reasons
 - Region other than East US 2
 - VM sizes not in approved list
 - Missing mandatory tags
